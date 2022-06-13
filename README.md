@@ -2,6 +2,8 @@
 
 本仓库的数据和脚本用于复现文章[1]里关于平衡态温稠密铝（密度为2.70 g/cm^3，温度为1 eV）的径向分布函数、静态结构因子和动态结构因子（Dynamic Structure Factor, DSF）。
 
+相关的描述可以参考正文和supplemental material
+
 > [1] Q. Zeng et al., Ab initio validation on the connection between atomistic and hydrodynamic description to unravel the ion dynamics of warm dense matter. [Physical Review Research 3, 033116 (2021)](https://journals.aps.org/prresearch/abstract/10.1103/PhysRevResearch.3.033116).
 
 ---
