@@ -1,0 +1,39 @@
+#!/bin/sh
+#BSUB -q snode
+#BSUB -n 96
+#BSUB -J Al_dsf_16
+#BSUB -R "span[ptile=32]"
+
+#Environment
+. /public/home/users/app/compiler/intel-2017.8/compilers_and_libraries_2017.8.262/linux/bin/compilervars.sh intel64
+
+CURDIR=$PWD
+rm -f nodelist >& /dev/null
+for host in `echo $LSB_HOSTS`
+do
+   echo $host >> nodelist
+done
+
+NP=`cat nodelist |wc -l`
+
+lammps=/public/home/users/nudt004/zeng/software/lammps-stable_29Oct2020/src/lmp_zeng
+
+initfile=init.in
+calfile=cal.in
+
+for i in 1 # 5 10
+do
+	sed -i "s/i index 1/i index $i/g" $initfile
+	sed -i "s/i index 1/i index $i/g" $calfile
+
+	mpirun -np $NP -machinefile $CURDIR/nodelist $lammps -in $initfile > log.init.$i
+	mpirun -np $NP -machinefile $CURDIR/nodelist $lammps -in $calfile > log.cal.$i
+
+	sed -i "s/i index $i/i index 1/g" $initfile
+	sed -i "s/i index $i/i index 1/g" $calfile
+
+	mkdir dump-$i
+
+  mv dump.* ./dump-$i
+
+done

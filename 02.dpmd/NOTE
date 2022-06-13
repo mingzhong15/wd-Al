@@ -1,0 +1,9 @@
+
+mpirun -np $NP $lammps -in init.in > log.init
+mpirun -np $NP $lammps -in cal.in > log.cal
+
+
+mkdir dump
+
+mv dump.* ./dump
+

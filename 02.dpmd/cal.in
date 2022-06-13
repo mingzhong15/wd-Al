@@ -1,0 +1,44 @@
+# -------------- heating Aluminum to high temperature region --------------  # 
+echo			both
+
+variable       		 i index 1
+variable  		     T equal $i*5804.35*2
+variable       		 x equal 1*5804.35*2
+
+# --------------  Initial statement --------------  # 
+
+read_restart		Al.init.$i
+
+# --------------simulation set--------------  # 
+pair_style		    deepmd Al.i1.cp.pb # fparam $T
+pair_coeff		
+
+timestep       		0.001 # 1fs
+
+neighbor                1 bin
+neigh_modify            every 10 delay 0 check yes
+
+# --------------compute & dump--------------  # 
+thermo                  1000
+thermo_style            custom step time temp press vol pe etotal
+
+variable                t equal 150000
+
+# for RDF calculation
+compute                 RDF all rdf 100
+fix                     rdf all ave/time 1000 100 $t c_RDF[*] file rdf.txt mode vector
+
+#
+dump                    1 all custom 10 dump.* id type xu yu zu vx vy vz
+dump_modify             1 sort id
+# -------------- run --------------  # 
+
+fix                     1 all nvt temp $x $x 4.0 drag 0.2
+run                     $t
+
+unfix                   1
+unfix                   rdf
+
+reset_timestep		0
+write_restart		Al.relaxed.$i
+
