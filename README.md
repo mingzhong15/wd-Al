@@ -12,6 +12,6 @@
 
 - `01.dp-train`：dpkit的输入文件（基于dpkit1.3.2版本的），`fitting net`、`stopbatch`、`start_lr`的参数都是很常见的设置。
 
-- `02.dpmd`：LAMMPS的输入文件，包含初始弛豫`init.in`和产生NVT系综下的原子轨迹`cal.in`，执行顺序见文件`NOTE`。该步骤会得到径向分布函数`rdf.txt`和原子轨迹文件`dump.*`，后者用于后处理计算密度的时空关联函数
+- `02.dpmd`：LAMMPS的输入文件，包含初始弛豫`init.in`和产生NVT系综下的原子轨迹`cal.in`，执行顺序见文件`NOTE`。可以通过修改`init.in`来计算不同原子数体系，比如`16x16x16`（包含16384原子）或者`6x6x6`(包含864原子)。该步骤最终会得到径向分布函数`rdf.txt`和原子轨迹文件`dump.*`，后者用于后处理计算密度的时空关联函数
 
-- `03.dsf`：python脚本`test.py`通过LAMMPS输出轨迹文件`02.dpmd/dump/dump.*`计算DSF，由于DSF涉及到不同的波矢取值（k），先后运行`00.generate_run.sh`和`01.sub_all.sh`可以在超算平台（以魔方3的lsf作业系统为例）提交不同波矢的DSF计算，实现某种意义的并行。每个case的python计算时间与体系大小有关，体系为`16x16x16`（包含16384原子）时，计算时间约为1个小时
+- `03.dsf`：python脚本`test.py`通过LAMMPS输出轨迹文件`02.dpmd/dump/dump.*`计算DSF，由于DSF涉及到不同的波矢取值（k），先后运行`00.generate_run.sh`和`01.sub_all.sh`可以在超算平台（以魔方3的lsf作业系统为例）提交不同波矢的DSF计算，实现某种意义的并行。每个case的python计算时间与体系大小有关，体系为`16x16x16`（包含16384原子）时，计算时间约为1个小时。`results_864`包含了864原子体系计算的DSF，可用于对比。
