@@ -1,0 +1,5 @@
+#!/bin/sh
+#BSUB -q score
+#BSUB -n 1
+
+python 1.py
